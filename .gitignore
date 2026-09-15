@@ -1,0 +1,14 @@
+# per-user state written next to the app
+settings.json
+session.json
+# build output
+build/
+dist/
+*.spec
+icon.icns
+icon.iconset/
+__pycache__/
+# local tooling / notes
+.claude/
+research/
+social_preview.png
