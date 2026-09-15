@@ -48,6 +48,7 @@ COVER_RE = re.compile(r'<img[^>]+src="([^"]*cover[^"]*)"', re.I)
 EXTS = ["any", "pdf", "epub", "djvu", "mobi", "azw3", "fb2", "cbz", "cbr"]
 
 C_CHECK, C_TITLE, C_AUTHOR, C_YEAR, C_PUBLISHER, C_LANG, C_PAGES, C_SIZE, C_EXT, C_LINK, C_INFO = range(11)
+COL_WIDTH = {C_TITLE: (320, 520), C_AUTHOR: (140, 260), C_PUBLISHER: (120, 220)}  # (min, max) px; others default
 HEADERS = ["", "Title", "Author(s)", "Year", "Publisher", "Language", "Pages", "Size", "Ext", "Link", ""]
 
 PLACEHOLDERS = [
@@ -591,7 +592,9 @@ class ResultsTab(QWidget):
                 row[col].setTextAlignment(Qt.AlignCenter)
             self.model.appendRow(row)
         self.view.resizeColumnsToContents()
-        self.view.setColumnWidth(C_TITLE, min(520, max(320, self.view.columnWidth(C_TITLE))))
+        for col in range(self.model.columnCount()):  # clamp so one long cell can't stretch a column
+            lo, hi = COL_WIDTH.get(col, (40, 120))
+            self.view.setColumnWidth(col, min(hi, max(lo, self.view.columnWidth(col))))
         self.update_status()
         self.win.update_selection_count()
 
